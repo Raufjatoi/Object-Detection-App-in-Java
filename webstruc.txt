@@ -1,0 +1,21 @@
+/ObjectDetectionApp
+├── lib/             # Optional: External libraries or dependencies
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── com
+│   │   │       └── example
+│   │   │           └── objectdetection
+│   │   │               ├── ObjectDetectionApplication.java
+│   │   │               ├── LiveDetectionServlet.java
+│   │   │               ├── CustomDetectionServlet.java
+│   │   │               ├── live.java
+│   │   │               └── custom.java
+│   │   ├── resources
+│   │   └── webapp
+│   │       ├── index.html
+│   │       ├── css
+│   │       │   └── style.css
+│   │       └── js
+│   │           └── script.js
+├── pom.xml

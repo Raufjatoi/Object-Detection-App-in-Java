@@ -3,6 +3,7 @@ import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class YoloObjectDetection {
+public class CustomObjectDetection {
     static {
         // Load the OpenCV library
         System.load("D:\\Downloads\\opencv\\build\\java\\x64\\opencv_java490.dll");
@@ -24,9 +25,18 @@ public class YoloObjectDetection {
         // Load OpenCV library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        // Define the file paths
+        // Ask for the image to detect
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue != JFileChooser.APPROVE_OPTION) {
+            System.out.println("No image selected.");
+            return;
+        }
+
+        String inputImagePath = fileChooser.getSelectedFile().getPath();
+
+        // Define the folder path and other file paths
         String folderPath = "D:\\Documents\\GitHub\\java\\";
-        String inputImagePath = folderPath + "group.jpg";
         String modelConfiguration = folderPath + "yolov4.cfg";
         String modelWeights = folderPath + "yolov4.weights";
         String classNamesFile = folderPath + "coco.names";
@@ -108,12 +118,12 @@ public class YoloObjectDetection {
 
                     if (!foundSimilar) {
                         // Draw rectangle
-                        Color color = colorMap.get(classNames.get(classId));
+                        Color color = colorMap.getOrDefault(classNames.get(classId), Color.RED);
                         g2d.setColor(color);
                         g2d.drawRect(left, top, width, height);
 
                         // Annotate object
-                        g2d.setColor(Color.BLACK); // Set label color to white
+                        g2d.setColor(Color.BLACK); // Set label color to black
                         String label = classNames.get(classId) + ": " + new DecimalFormat("#.##").format(confidence);
                         int textX = left;
                         int textY = top - 10; // Adjust vertical position
@@ -149,7 +159,7 @@ public class YoloObjectDetection {
         image = bufferedImageToMat(bufImage);
 
         // Save annotated image
-        String outputImagePath = folderPath + "detected.JPG";
+        String outputImagePath = folderPath + "detected.png";
         Imgcodecs.imwrite(outputImagePath, image);
     }
 
@@ -229,87 +239,85 @@ public class YoloObjectDetection {
     private static Map<String, Color> createColorMap() {
         Map<String, Color> colorMap = new HashMap<>();
         colorMap.put("person", Color.BLUE);
-        colorMap.put("bicycle", Color.CYAN);
+        colorMap.put("bicycle", Color.RED);
         colorMap.put("car", Color.RED);
-        colorMap.put("motorbike", Color.MAGENTA);
-        colorMap.put("aeroplane", Color.ORANGE);
-        colorMap.put("bus", Color.YELLOW);
-        colorMap.put("train", Color.PINK);
-        colorMap.put("truck", Color.LIGHT_GRAY);
-        colorMap.put("boat", Color.GREEN);
+        colorMap.put("motorbike", Color.RED);
+        colorMap.put("aeroplane", Color.RED);
+        colorMap.put("bus", Color.RED);
+        colorMap.put("train", Color.RED);
+        colorMap.put("truck", Color.RED);
+        colorMap.put("boat", Color.RED);
         colorMap.put("traffic light", Color.RED);
         colorMap.put("fire hydrant", Color.RED);
         colorMap.put("stop sign", Color.RED);
-        colorMap.put("parking meter", Color.BLUE);
-        colorMap.put("bench", Color.GRAY);
-        colorMap.put("bird", Color.GREEN);
-        colorMap.put("cat", Color.GREEN);
-        colorMap.put("dog", Color.GREEN);
-        colorMap.put("horse", Color.GREEN);
-        colorMap.put("sheep", Color.GREEN);
-        colorMap.put("cow", Color.GREEN);
-        colorMap.put("elephant", Color.GREEN);
-        colorMap.put("bear", Color.GREEN);
-        colorMap.put("zebra", Color.GREEN);
-        colorMap.put("giraffe", Color.GREEN);
-        colorMap.put("backpack", Color.YELLOW);
-        colorMap.put("umbrella", Color.YELLOW);
-        colorMap.put("handbag", Color.YELLOW);
-        colorMap.put("tie", Color.YELLOW);
-        colorMap.put("suitcase", Color.YELLOW);
-        colorMap.put("frisbee", Color.MAGENTA);
-        colorMap.put("skis", Color.CYAN);
-        colorMap.put("snowboard", Color.CYAN);
-        colorMap.put("sports ball", Color.MAGENTA);
-        colorMap.put("kite", Color.MAGENTA);
-        colorMap.put("baseball bat", Color.MAGENTA);
-        colorMap.put("baseball glove", Color.MAGENTA);
-        colorMap.put("skateboard", Color.CYAN);
-        colorMap.put("surfboard", Color.CYAN);
-        colorMap.put("tennis racket", Color.MAGENTA);
-        colorMap.put("bottle", Color.BLUE);
-        colorMap.put("wine glass", Color.BLUE);
-        colorMap.put("cup", Color.BLUE);
-        colorMap.put("fork", Color.BLUE);
-        colorMap.put("knife", Color.BLUE);
-        colorMap.put("spoon", Color.BLUE);
-        colorMap.put("bowl", Color.BLUE);
-        colorMap.put("banana", Color.YELLOW);
-        colorMap.put("apple", Color.YELLOW);
-        colorMap.put("sandwich", Color.YELLOW);
-        colorMap.put("orange", Color.YELLOW);
-        colorMap.put("broccoli", Color.GREEN);
-        colorMap.put("carrot", Color.GREEN);
-        colorMap.put("hot dog", Color.YELLOW);
-        colorMap.put("pizza", Color.YELLOW);
-        colorMap.put("donut", Color.YELLOW);
-        colorMap.put("cake", Color.YELLOW);
-        colorMap.put("chair", Color.GRAY);
-        colorMap.put("sofa", Color.GRAY);
-        colorMap.put("pottedplant", Color.GREEN);
-        colorMap.put("bed", Color.GRAY);
-        colorMap.put("diningtable", Color.GRAY);
-        colorMap.put("toilet", Color.GRAY);
-        colorMap.put("tvmonitor", Color.GRAY);
-        colorMap.put("laptop", Color.GRAY);
-        colorMap.put("mouse", Color.GRAY);
-        colorMap.put("remote", Color.GRAY);
-        colorMap.put("keyboard", Color.GRAY);
-        colorMap.put("cell phone", Color.GRAY);
-        colorMap.put("microwave", Color.LIGHT_GRAY);
-        colorMap.put("oven", Color.LIGHT_GRAY);
-        colorMap.put("toaster", Color.LIGHT_GRAY);
-        colorMap.put("sink", Color.LIGHT_GRAY);
-        colorMap.put("refrigerator", Color.LIGHT_GRAY);
-        colorMap.put("book", Color.WHITE);
-        colorMap.put("clock", Color.WHITE);
-        colorMap.put("vase", Color.WHITE);
-        colorMap.put("scissors", Color.WHITE);
-        colorMap.put("teddy bear", Color.PINK);
-        colorMap.put("hair drier", Color.PINK);
-        colorMap.put("toothbrush", Color.PINK);
+        colorMap.put("parking meter", Color.RED);
+        colorMap.put("bench", Color.RED);
+        colorMap.put("bird", Color.RED);
+        colorMap.put("cat", Color.RED);
+        colorMap.put("dog", Color.RED);
+        colorMap.put("horse", Color.RED);
+        colorMap.put("sheep", Color.RED);
+        colorMap.put("cow", Color.RED);
+        colorMap.put("elephant", Color.RED);
+        colorMap.put("bear", Color.RED);
+        colorMap.put("zebra", Color.RED);
+        colorMap.put("giraffe", Color.RED);
+        colorMap.put("backpack", Color.RED);
+        colorMap.put("umbrella", Color.RED);
+        colorMap.put("handbag", Color.RED);
+        colorMap.put("tie", Color.RED);
+        colorMap.put("suitcase", Color.RED);
+        colorMap.put("frisbee", Color.RED);
+        colorMap.put("skis", Color.RED);
+        colorMap.put("snowboard", Color.RED);
+        colorMap.put("sports ball", Color.RED);
+        colorMap.put("kite", Color.RED);
+        colorMap.put("baseball bat", Color.RED);
+        colorMap.put("baseball glove", Color.RED);
+        colorMap.put("skateboard", Color.RED);
+        colorMap.put("surfboard", Color.RED);
+        colorMap.put("tennis racket", Color.RED);
+        colorMap.put("bottle", Color.RED);
+        colorMap.put("wine glass", Color.RED);
+        colorMap.put("cup", Color.RED);
+        colorMap.put("fork", Color.RED);
+        colorMap.put("knife", Color.RED);
+        colorMap.put("spoon", Color.RED);
+        colorMap.put("bowl", Color.RED);
+        colorMap.put("banana", Color.RED);
+        colorMap.put("apple", Color.RED);
+        colorMap.put("sandwich", Color.RED);
+        colorMap.put("orange", Color.RED);
+        colorMap.put("broccoli", Color.RED);
+        colorMap.put("carrot", Color.RED);
+        colorMap.put("hot dog", Color.RED);
+        colorMap.put("pizza", Color.RED);
+        colorMap.put("donut", Color.RED);
+        colorMap.put("cake", Color.RED);
+        colorMap.put("chair", Color.RED);
+        colorMap.put("sofa", Color.RED);
+        colorMap.put("pottedplant", Color.RED);
+        colorMap.put("bed", Color.RED);
+        colorMap.put("diningtable", Color.RED);
+        colorMap.put("toilet", Color.RED);
+        colorMap.put("tvmonitor", Color.RED);
+        colorMap.put("laptop", Color.RED);
+        colorMap.put("mouse", Color.RED);
+        colorMap.put("remote", Color.RED);
+        colorMap.put("keyboard", Color.RED);
+        colorMap.put("cell phone", Color.RED);
+        colorMap.put("microwave", Color.RED);
+        colorMap.put("oven", Color.RED);
+        colorMap.put("toaster", Color.RED);
+        colorMap.put("sink", Color.RED);
+        colorMap.put("refrigerator", Color.RED);
+        colorMap.put("book", Color.RED);
+        colorMap.put("clock", Color.RED);
+        colorMap.put("vase", Color.RED);
+        colorMap.put("scissors", Color.RED);
+        colorMap.put("teddy bear", Color.RED);
+        colorMap.put("hair drier", Color.RED);
+        colorMap.put("toothbrush", Color.RED);
         return colorMap;
     }
 }
-
-       

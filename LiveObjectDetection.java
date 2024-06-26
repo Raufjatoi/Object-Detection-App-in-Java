@@ -138,12 +138,12 @@ public class LiveObjectDetection {
 
                         if (!foundSimilar) {
                             // Draw rectangle
-                            Color color = colorMap.get(classNames.get(classId));
+                            Color color = (classNames.get(classId).equals("person")) ? Color.BLUE : Color.RED;
                             g2d.setColor(color);
                             g2d.drawRect(left, top, width, height);
 
                             // Annotate object
-                            g2d.setColor(Color.WHITE); // Set label color to white
+                            g2d.setColor(Color.BLACK); // Set label color to black
                             String label = classNames.get(classId) + ": " + new DecimalFormat("#.##").format(confidence);
                             int textX = left;
                             int textY = top - 10; // Adjust vertical position
@@ -248,23 +248,86 @@ public class LiveObjectDetection {
     private static Map<String, Color> createColorMap() {
         Map<String, Color> colorMap = new HashMap<>();
         // Define colors for each class
-        // Add your color mappings here if
-        // Define colors for each class
-        // Add your color mappings here if they were cut off
-        colorMap.put("keyboard", Color.GRAY);
-        colorMap.put("cell phone", Color.GRAY);
-        colorMap.put("microwave", Color.LIGHT_GRAY);
-        colorMap.put("oven", Color.LIGHT_GRAY);
-        colorMap.put("toaster", Color.LIGHT_GRAY);
-        colorMap.put("sink", Color.LIGHT_GRAY);
-        colorMap.put("refrigerator", Color.LIGHT_GRAY);
-        colorMap.put("book", Color.WHITE);
-        colorMap.put("clock", Color.WHITE);
-        colorMap.put("vase", Color.WHITE);
-        colorMap.put("scissors", Color.WHITE);
-        colorMap.put("teddy bear", Color.PINK);
-        colorMap.put("hair drier", Color.PINK);
-        colorMap.put("toothbrush", Color.PINK);
+        colorMap.put("person", Color.BLUE);
+        colorMap.put("bicycle", Color.RED);
+        colorMap.put("car", Color.RED);
+        colorMap.put("motorbike", Color.RED);
+        colorMap.put("aeroplane", Color.RED);
+        colorMap.put("bus", Color.RED);
+        colorMap.put("train", Color.RED);
+        colorMap.put("truck", Color.RED);
+        colorMap.put("boat", Color.RED);
+        colorMap.put("traffic light", Color.RED);
+        colorMap.put("fire hydrant", Color.RED);
+        colorMap.put("stop sign", Color.RED);
+        colorMap.put("parking meter", Color.RED);
+        colorMap.put("bench", Color.RED);
+        colorMap.put("bird", Color.RED);
+        colorMap.put("cat", Color.RED);
+        colorMap.put("dog", Color.RED);
+        colorMap.put("horse", Color.RED);
+        colorMap.put("sheep", Color.RED);
+        colorMap.put("cow", Color.RED);
+        colorMap.put("elephant", Color.RED);
+        colorMap.put("bear", Color.RED);
+        colorMap.put("zebra", Color.RED);
+        colorMap.put("giraffe", Color.RED);
+        colorMap.put("backpack", Color.RED);
+        colorMap.put("umbrella", Color.RED);
+        colorMap.put("handbag", Color.RED);
+        colorMap.put("tie", Color.RED);
+        colorMap.put("suitcase", Color.RED);
+        colorMap.put("frisbee", Color.RED);
+        colorMap.put("skis", Color.RED);
+        colorMap.put("snowboard", Color.RED);
+        colorMap.put("sports ball", Color.RED);
+        colorMap.put("kite", Color.RED);
+        colorMap.put("baseball bat", Color.RED);
+        colorMap.put("baseball glove", Color.RED);
+        colorMap.put("skateboard", Color.RED);
+        colorMap.put("surfboard", Color.RED);
+        colorMap.put("tennis racket", Color.RED);
+        colorMap.put("bottle", Color.RED);
+        colorMap.put("wine glass", Color.RED);
+        colorMap.put("cup", Color.RED);
+        colorMap.put("fork", Color.RED);
+        colorMap.put("knife", Color.RED);
+        colorMap.put("spoon", Color.RED);
+        colorMap.put("bowl", Color.RED);
+        colorMap.put("banana", Color.RED);
+        colorMap.put("apple", Color.RED);
+        colorMap.put("sandwich", Color.RED);
+        colorMap.put("orange", Color.RED);
+        colorMap.put("broccoli", Color.RED);
+        colorMap.put("carrot", Color.RED);
+        colorMap.put("hot dog", Color.RED);
+        colorMap.put("pizza", Color.RED);
+        colorMap.put("donut", Color.RED);
+        colorMap.put("cake", Color.RED);
+        colorMap.put("chair", Color.RED);
+        colorMap.put("sofa", Color.RED);
+        colorMap.put("pottedplant", Color.RED);
+        colorMap.put("bed", Color.RED);
+        colorMap.put("diningtable", Color.RED);
+        colorMap.put("toilet", Color.RED);
+        colorMap.put("tvmonitor", Color.RED);
+        colorMap.put("laptop", Color.RED);
+        colorMap.put("mouse", Color.RED);
+        colorMap.put("remote", Color.RED);
+        colorMap.put("keyboard", Color.RED);
+        colorMap.put("cell phone", Color.RED);
+        colorMap.put("microwave", Color.RED);
+        colorMap.put("oven", Color.RED);
+        colorMap.put("toaster", Color.RED);
+        colorMap.put("sink", Color.RED);
+        colorMap.put("refrigerator", Color.RED);
+        colorMap.put("book", Color.RED);
+        colorMap.put("clock", Color.RED);
+        colorMap.put("vase", Color.RED);
+        colorMap.put("scissors", Color.RED);
+        colorMap.put("teddy bear", Color.RED);
+        colorMap.put("hair drier", Color.RED);
+        colorMap.put("toothbrush", Color.RED);
         return colorMap;
     }
 }

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection App 💻</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+        }
+        .profile-pics img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+        .profile-pics img:hover {
+            filter: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .footer a {
+            margin: 0 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .download-app {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Object Detection App 💻</h1>
+        <div class="profile-pics">
+            <a href="link_to_profile_1"><img src="rp.PNG" alt="Profile 1"></a>
+            <a href="link_to_profile_2"><img src="ahsan.jpeg" alt="Profile 2"></a>
+            <a href="link_to_profile_3"><img src="umar.jpeg" alt="Profile 3"></a>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <button class="btn btn-primary btn-lg mr-2" onclick="startLiveDetection()">Start Live Detection</button>
+            <button class="btn btn-secondary btn-lg" onclick="startCustomDetection()">Start Custom Detection</button>
+        </div>
+        <div id="live-detection" class="mt-4" style="display: none;">
+            <video id="video" width="640" height="480" autoplay></video>
+            <br>
+            <button class="btn btn-danger mt-2" onclick="stopLiveDetection()">Stop Live Detection</button>
+        </div>
+        <div id="custom-detection" class="mt-4" style="display: none;">
+            <input type="file" id="imageUpload" accept="image/*" onchange="handleFileUpload(event)">
+            <br>
+            <img id="uploadedImage" style="max-width: 100%; display: none;" />
+            <button class="btn btn-success mt-2" onclick="runCustomDetection()">Detect Objects</button>
+        </div>
+    </div>
+    <div class="footer">
+        By <a href="link_to_rauf">Rauf</a>, <a href="link_to_ahsan">Ahsan</a>, <a href="link_to_umar">Umar</a>
+    </div>
+    <button class="btn btn-info download-app" onclick="downloadApp()">About the app </button>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        function downloadApp() {
+            window.location.href = 'link_to_download';
+        }
+    </script>
+</body>
+</html>
