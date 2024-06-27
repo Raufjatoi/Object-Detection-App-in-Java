@@ -1,0 +1,12 @@
+my-object-detection-app/
+├── index.html
+├── script.js
+├── server.java
+├── CustomObjectDetection.java
+├── WebcamObjectDetection.java
+├── models/
+│   ├── yolov4.cfg
+│   ├── yolov4.weights
+│   ├── coco.names
+└── images/
+    └── detected.png

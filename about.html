@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Object Detection App 💻</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contributor-img {
+            width: 100px; /* Adjust as needed */
+            height: 100px; /* Adjust as needed */
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header text-center my-4">
+        <a href="index.html" class="btn btn-primary ml-2 mt-2">Home</a>
+        <h1>About Object Detection App 💻</h1>
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>How to Use</h2>
+                <p>
+                    Welcome to the Object Detection App! This app allows you to perform live object detection using your webcam or upload an image for custom detection. Here's how to use it:
+                </p>
+                <ul>
+                    <li><strong>Live Detection:</strong> Click on "Start Live Detection" to use your webcam for real-time object detection. Click "Stop Live Detection" to stop.</li>
+                    <li><strong>Custom Detection:</strong> Click on "Start Custom Detection" to upload an image from your device. Click "Detect Objects" after selecting an image.</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h2>Contributors</h2>
+                <div class="profile-contributors">
+                    <div class="profile">
+                        <img src="rp.PNG" alt="Rauf" class="rounded-circle contributor-img">
+                        <h4>Rauf</h4>
+                        <p>Works on model development.</p>
+                    </div>
+                    <div class="profile">
+                        <img src="ahsan.jpeg" alt="Ahsan" class="rounded-circle contributor-img">
+                        <h4>Ahsan</h4>
+                        <p>Works on GUI development.</p>
+                    </div>
+                    <div class="profile">
+                        <img src="umar.jpeg" alt="Umar" class="rounded-circle contributor-img">
+                        <h4>Umar</h4>
+                        <p>Works on UI/UX design.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer text-center mt-5">
+        By <a href="link_to_rauf">Rauf</a>, <a href="link_to_ahsan">Ahsan</a>, <a href="link_to_umar">Umar</a>
+    </div>
+    <script>
+        function goToHomePage() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
