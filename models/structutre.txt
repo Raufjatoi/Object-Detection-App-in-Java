@@ -1,9 +1,10 @@
-my-object-detection-app/
+Object-Detection-App/
 ├── index.html
+├── live.html
+├── custom.html
 ├── script.js
-├── server.java
-├── CustomObjectDetection.java
-├── WebcamObjectDetection.java
+├── custom.java
+├── live.java
 ├── models/
 │   ├── yolov4.cfg
 │   ├── yolov4.weights

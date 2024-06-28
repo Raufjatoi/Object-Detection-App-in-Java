@@ -27,9 +27,9 @@ public class live{
 
         // Load YOLO model
         String folderPath = "D:\\Documents\\GitHub\\java\\";
-        String modelConfiguration = folderPath + "yolov4.cfg";
-        String modelWeights = folderPath + "yolov4.weights";
-        String classNamesFile = folderPath + "coco.names";
+        String modelConfiguration = folderPath + "models/yolov4.cfg";
+        String modelWeights = folderPath + "models/yolov4.weights";
+        String classNamesFile = folderPath + "models/coco.names";
 
         Net net = Dnn.readNetFromDarknet(modelConfiguration, modelWeights);
         if (net.empty()) {

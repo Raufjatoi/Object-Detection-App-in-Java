@@ -1,31 +1,29 @@
-import java.util.List;
+import java.util.List; // Import java.util.List explicitly
+
 import org.opencv.core.*;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.utils.Converters;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 import javax.imageio.ImageIO;
 
-public class custom {
+public class test {
 
     static {
-        // Load the OpenCV library
-        System.load("D:\\Downloads\\opencv\\build\\java\\x64\\opencv_java490.dll");
+        // Load OpenCV library
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     public static void main(String[] args) {
-        // Load OpenCV library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
         try {
             // Create a server socket on port 8000
             ServerSocket serverSocket = new ServerSocket(8000);
@@ -243,21 +241,17 @@ public class custom {
 
         BufferedImage image = new BufferedImage(cols, rows, type);
         image.getRaster().setDataElements(0, 0, cols, rows, data);
+
         return image;
     }
 
     private static Map<String, Color> createColorMap() {
         Map<String, Color> colorMap = new HashMap<>();
-        colorMap.put("person", Color.RED);
-        colorMap.put("bicycle", Color.BLUE);
-        colorMap.put("car", Color.GREEN);
-        colorMap.put("motorbike", Color.MAGENTA);
-        colorMap.put("aeroplane", Color.CYAN);
-        colorMap.put("bus", Color.ORANGE);
-        colorMap.put("train", Color.PINK);
-        colorMap.put("truck", Color.YELLOW);
-        colorMap.put("boat", Color.LIGHT_GRAY);
-        colorMap.put("traffic light", Color.DARK_GRAY);
+        // Define colors for each class (use unique colors for better visibility)
+        colorMap.put("person", new Color(255, 0, 0)); // Red
+        colorMap.put("bicycle", new Color(0, 255, 0)); // Green
+        colorMap.put("car", new Color(0, 0, 255)); // Blue
+        // Add more classes and colors as needed
         return colorMap;
     }
 }
