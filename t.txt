@@ -1,1 +1,0 @@
-yolov5m.yaml yolov5m-seg.pt

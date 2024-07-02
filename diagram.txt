@@ -1,0 +1,13 @@
++----------------------+
+|  ObjectDetectionApp  |
++----------------------+
+| + main(String[] args) |
+| + createProfilePic(String filePath) : JLabel |
+| + drawDetections(Mat frame, List<Mat> result, List<String> classNames, Map<String, Color> colorMap, JLabel objectCountLabel) |
+| + startLiveDetection() |
+| + startCustomDetection() |
+| + getOutputNames(Net net) : List<String> |
+| + matToBufferedImage(Mat mat) : BufferedImage |
+| + loadClassNames(String filePath) : List<String> |
+| + createColorMap() : Map<String, Color> |
++----------------------+

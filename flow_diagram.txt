@@ -1,0 +1,18 @@
+flowchart TD
+    A[Start Application] --> B[Main Window]
+    B -->|Click Live Detection| C[Load YOLO Model]
+    C --> D[Open Video Capture]
+    D --> E[Display Video Feed]
+    E --> F[Perform Object Detection on Frame]
+    F --> G[Display Detected Objects and Count]
+    G --> H{Buttons}
+    H -->|Stop Detection| I[Stop Detection and Go to Main Window]
+    H -->|Back| J[Go to Main Window]
+
+    B -->|Click Custom Detection| K[Load YOLO Model]
+    K --> L[Open File Chooser]
+    L --> M[Select Image]
+    M --> N[Display Selected Image]
+    N --> O[Perform Object Detection on Image]
+    O --> P[Display Detected Objects and Count]
+    P --> Q[Back to Main Window]
