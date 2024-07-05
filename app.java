@@ -5,7 +5,6 @@ import org.opencv.dnn.Net;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.Videoio;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,13 +15,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.BufferedReader;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class app {
     static {
@@ -30,34 +31,45 @@ public class app {
         System.load("D:\\Downloads\\opencv\\build\\java\\x64\\opencv_java490.dll");
     }
 
+    private static JFrame mainFrame;
+
     public static void main(String[] args) {
         // Load OpenCV library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         // Create main window
-        JFrame frame = new JFrame("Object Detection App");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen window
-        frame.setLayout(new BorderLayout());
+        mainFrame = new JFrame("Object Detection App");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen window
+        mainFrame.setLayout(new BorderLayout());
+        mainFrame.getRootPane().setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK)); // Border for the window
 
         // Header
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
         headerPanel.setBackground(new Color(0, 102, 204));
+        headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.BLACK)); // Border for the header
+
+        // Cool emoji or icon (replace with your preferred image)
+        ImageIcon coolIcon = new ImageIcon("cool_detection_icon.png");
+        JLabel coolLabel = new JLabel(coolIcon);
+        coolLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        headerPanel.add(coolLabel, BorderLayout.WEST);
+
         JLabel titleLabel = new JLabel("Object Detection App", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
 
         // Profile pictures with hover effect
         JPanel profilePanel = new JPanel();
         profilePanel.setBackground(new Color(0, 102, 204));
         profilePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        profilePanel.add(createProfilePic("rp.PNG", "Live Detection", e -> startLiveDetection(frame)));
-        profilePanel.add(createProfilePic("umar.jpeg", "Custom Detection", e -> startCustomDetection(frame)));
+        profilePanel.add(createProfilePic("rp.PNG", "Live Detection", e -> startLiveDetection(mainFrame)));
+        profilePanel.add(createProfilePic("umar.jpeg", "Custom Detection", e -> startCustomDetection(mainFrame)));
         profilePanel.add(createProfilePic("ahsan.jpeg", "About", e -> showAbout()));
 
-        headerPanel.add(titleLabel, BorderLayout.CENTER);
         headerPanel.add(profilePanel, BorderLayout.EAST);
 
         // Center panel for buttons
@@ -67,8 +79,8 @@ public class app {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JButton liveDetectionButton = createStyledButton("Live Detection", e -> startLiveDetection(frame));
-        JButton customDetectionButton = createStyledButton("Custom Detection", e -> startCustomDetection(frame));
+        JButton liveDetectionButton = createStyledButton("Live Detection", e -> startLiveDetection(mainFrame));
+        JButton customDetectionButton = createStyledButton("Custom Detection", e -> startCustomDetection(mainFrame));
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -80,7 +92,7 @@ public class app {
         JPanel footerPanel = new JPanel();
         footerPanel.setBackground(new Color(0, 102, 204));
         footerPanel.setLayout(new BorderLayout());
-        footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        footerPanel.setBorder(BorderFactory.createMatteBorder(5, 0, 0, 0, Color.BLACK)); // Border for the footer
         JLabel footerLabel = new JLabel("By Rauf, Ahsan, and Umar", SwingConstants.CENTER);
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         footerLabel.setForeground(Color.WHITE);
@@ -92,12 +104,12 @@ public class app {
         footerPanel.add(footerLabel, BorderLayout.CENTER);
         footerPanel.add(aboutButton, BorderLayout.EAST);
 
-        // Add panels to frame
-        frame.add(headerPanel, BorderLayout.NORTH);
-        frame.add(centerPanel, BorderLayout.CENTER);
-        frame.add(footerPanel, BorderLayout.SOUTH);
+        // Add panels to main frame
+        mainFrame.add(headerPanel, BorderLayout.NORTH);
+        mainFrame.add(centerPanel, BorderLayout.CENTER);
+        mainFrame.add(footerPanel, BorderLayout.SOUTH);
 
-        frame.setVisible(true);
+        mainFrame.setVisible(true);
     }
 
     private static JButton createStyledButton(String text, ActionListener action) {
@@ -127,8 +139,11 @@ public class app {
         try {
             BufferedImage profilePic = ImageIO.read(new File(filePath));
             Image scaledImage = profilePic.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-            JLabel label = new JLabel(new ImageIcon(scaledImage));
+            ImageIcon icon = new ImageIcon(scaledImage);
+
+            JLabel label = new JLabel(icon);
             label.setToolTipText(toolTipText);
+            label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -137,11 +152,13 @@ public class app {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
+                    label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
                     label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
+                    label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
                     label.setCursor(Cursor.getDefaultCursor());
                 }
             });
@@ -154,6 +171,8 @@ public class app {
 
     private static void drawDetections(Mat frame, List<Mat> result, List<String> classNames, Map<String, Color> colorMap, JLabel objectCountLabel) {
         int objectsDetected = 0;
+        Map<String, Rectangle> drawnObjects = new HashMap<>(); // Track drawn objects
+
         for (Mat level : result) {
             for (int i = 0; i < level.rows(); ++i) {
                 Mat row = level.row(i);
@@ -162,7 +181,7 @@ public class app {
                 float confidence = (float) mm.maxVal;
                 Point classIdPoint = mm.maxLoc;
 
-                if (confidence > 0.65) {  // Confidence threshold 0.65
+                if (confidence > 0.65) {
                     int centerX = (int) (row.get(0, 0)[0] * frame.cols());
                     int centerY = (int) (row.get(0, 1)[0] * frame.rows());
                     int width = (int) (row.get(0, 2)[0] * frame.cols());
@@ -171,198 +190,206 @@ public class app {
                     int left = centerX - width / 2;
                     int top = centerY - height / 2;
 
-                    String label = classNames.get((int) classIdPoint.x);
-                    Color color = colorMap.getOrDefault(label, Color.RED);
-                    Imgproc.rectangle(frame, new Point(left, top), new Point(left + width, top + height), new Scalar(color.getRed(), color.getGreen(), color.getBlue()), 2);
-                    int[] baseLine = new int[1];
-                    Size labelSize = Imgproc.getTextSize(label, Imgproc.FONT_HERSHEY_SIMPLEX, 0.75, 1, baseLine);
+                    int classId = (int) classIdPoint.x;
+                    String label = classNames.get(classId);
+                    Color color = colorMap.get(label);
 
-                    top = Math.max(top, (int) labelSize.height);
-                    Imgproc.putText(frame, label, new Point(left, top), Imgproc.FONT_HERSHEY_SIMPLEX, 0.75, new Scalar(0, 0, 0), 2);
-                    objectsDetected++;
+                    Rectangle objectRect = new Rectangle(left, top, width, height);
+                    if (!isOverlapping(objectRect, drawnObjects)) {
+                        drawnObjects.put(label, objectRect);
+
+                        Imgproc.rectangle(frame, new Point(left, top), new Point(left + width, top + height), new Scalar(color.getRed(), color.getGreen(), color.getBlue()), 3);
+                        Imgproc.putText(frame, label, new Point(left, top - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(color.getRed(), color.getGreen(), color.getBlue()), 3);
+                        objectsDetected++;
+                    }
                 }
             }
         }
         objectCountLabel.setText("Objects Detected: " + objectsDetected);
     }
 
-    private static void startLiveDetection(JFrame frame) {
-        frame.dispose();
-
-        // Load the YOLO model
-        String folderPath = "D:\\Documents\\GitHub\\java\\";
-        String modelConfiguration = folderPath + "yolov4.cfg";
-        String modelWeights = folderPath + "yolov4.weights";
-        String classNamesFile = folderPath + "coco.names";
-
-        Net net = Dnn.readNetFromDarknet(modelConfiguration, modelWeights);
-        List<String> classNames = loadClassNames(classNamesFile);
-
-        if (net.empty() || classNames.isEmpty()) {
-            System.err.println("Cannot load network or class names.");
-            return;
+    private static boolean isOverlapping(Rectangle rect, Map<String, Rectangle> drawnObjects) {
+        for (Rectangle existingRect : drawnObjects.values()) {
+            if (rect.intersects(existingRect)) {
+                return true;
+            }
         }
+        return false;
+    }
 
-        // Open a video capture stream
-        VideoCapture capture = new VideoCapture(0); // Use default camera
-
-        if (!capture.isOpened()) {
-            System.err.println("Cannot open camera.");
-            return;
-        }
-
-        // Create a window for displaying the video
+    private static void startLiveDetection(JFrame mainFrame) {
         JFrame liveFrame = new JFrame("Live Detection");
-        liveFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        liveFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         liveFrame.setSize(800, 600);
         liveFrame.setLayout(new BorderLayout());
 
-        JLabel videoLabel = new JLabel();
-        liveFrame.add(videoLabel, BorderLayout.CENTER);
+        JLabel imageLabel = new JLabel();
+        liveFrame.add(imageLabel, BorderLayout.CENTER);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> liveFrame.dispose());
+        liveFrame.add(backButton, BorderLayout.SOUTH);
+
+        VideoCapture capture = new VideoCapture(0);
+        if (!capture.isOpened()) {
+            JOptionPane.showMessageDialog(mainFrame, "Error: Unable to open camera.");
+            return;
+        }
 
         JLabel objectCountLabel = new JLabel("Objects Detected: 0", SwingConstants.CENTER);
-        objectCountLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        objectCountLabel.setForeground(Color.WHITE);
-        liveFrame.add(objectCountLabel, BorderLayout.SOUTH);
+        objectCountLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        objectCountLabel.setForeground(Color.RED);
+        liveFrame.add(objectCountLabel, BorderLayout.NORTH);
 
-        liveFrame.setVisible(true);
+        Thread liveThread = new Thread(() -> {
+            Mat frame = new Mat();
+            Net net = Dnn.readNetFromDarknet("yolov3.cfg", "yolov3.weights");
+            net.setPreferableBackend(Dnn.DNN_BACKEND_OPENCV);
+            net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
 
-        Mat frameMatrix = new Mat();
+            List<String> classNames = getClassNames("coco.names");
+            Map<String, Color> colorMap = getColorMap(classNames);
 
-        // Object detection loop
-        while (liveFrame.isVisible() && capture.read(frameMatrix)) {
-            // Preprocess the frame
-            Mat blob = Dnn.blobFromImage(frameMatrix, 1 / 255.0, new Size(416, 416), new Scalar(0), true, false);
-            net.setInput(blob);
+            while (capture.isOpened()) {
+                capture.read(frame);
+                if (!frame.empty()) {
+                    List<Mat> result = new ArrayList<>();
+                    Mat blob = Dnn.blobFromImage(frame, 1 / 255.0, new Size(416, 416), new Scalar(0), true, false);
+                    net.setInput(blob);
+                    List<String> outBlobNames = net.getUnconnectedOutLayersNames();
+                    net.forward(result, outBlobNames);
 
-            // Perform forward pass
-            List<Mat> result = new ArrayList<>();
-            List<String> outBlobNames = getOutputNames(net);
-            net.forward(result, outBlobNames);
+                    drawDetections(frame, result, classNames, colorMap, objectCountLabel);
 
-            // Draw detections on the frame
-            drawDetections(frameMatrix, result, classNames, createColorMap(classNames), objectCountLabel);
-
-            // Display the frame
-            ImageIcon imageIcon = new ImageIcon(convertMatToImage(frameMatrix));
-            videoLabel.setIcon(imageIcon);
-
-            try {
-                Thread.sleep(33); // Delay for ~30 FPS
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                    BufferedImage image = matToBufferedImage(frame);
+                    if (image != null) {
+                        SwingUtilities.invokeLater(() -> imageLabel.setIcon(new ImageIcon(image)));
+                    }
+                }
             }
-        }
+        });
 
-        // Release resources
-        capture.release();
+        liveThread.start();
+        liveFrame.setVisible(true);
     }
 
-    private static void startCustomDetection(JFrame frame) {
-        frame.dispose();
-
-        // Load the YOLO model
-        String folderPath = "D:\\Documents\\GitHub\\java\\";
-        String modelConfiguration = folderPath + "yolov4.cfg";
-        String modelWeights = folderPath + "yolov4.weights";
-        String classNamesFile = folderPath + "coco.names";
-
-        Net net = Dnn.readNetFromDarknet(modelConfiguration, modelWeights);
-        List<String> classNames = loadClassNames(classNamesFile);
-
-        if (net.empty() || classNames.isEmpty()) {
-            System.err.println("Cannot load network or class names.");
-            return;
-        }
-
-        // Open a file chooser to select an image
-        JFileChooser fileChooser = new JFileChooser();
-        int result = fileChooser.showOpenDialog(null);
-
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-
-        File selectedFile = fileChooser.getSelectedFile();
-
-        // Load the selected image
-        Mat frameMatrix = Imgcodecs.imread(selectedFile.getAbsolutePath());
-
-        if (frameMatrix.empty()) {
-            System.err.println("Cannot read the image file.");
-            return;
-        }
-
-        // Preprocess the frame
-        Mat blob = Dnn.blobFromImage(frameMatrix, 1 / 255.0, new Size(416, 416), new Scalar(0), true, false);
-        net.setInput(blob);
-
-        // Perform forward pass
-        List<Mat> output = new ArrayList<>();
-        List<String> outBlobNames = getOutputNames(net);
-        net.forward(output, outBlobNames);
-
-        // Draw detections on the frame
-        drawDetections(frameMatrix, output, classNames, createColorMap(classNames), new JLabel());
-
-        // Display the result
-        JFrame resultFrame = new JFrame("Custom Detection");
-        resultFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        resultFrame.setSize(800, 600);
-        resultFrame.setLayout(new BorderLayout());
+    private static void startCustomDetection(JFrame mainFrame) {
+        JFrame customFrame = new JFrame("Custom Detection");
+        customFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        customFrame.setSize(800, 600);
+        customFrame.setLayout(new BorderLayout());
 
         JLabel imageLabel = new JLabel();
-        imageLabel.setIcon(new ImageIcon(convertMatToImage(frameMatrix)));
-        resultFrame.add(new JScrollPane(imageLabel), BorderLayout.CENTER);
+        customFrame.add(imageLabel, BorderLayout.CENTER);
 
-        JLabel objectCountLabel = new JLabel("Objects Detected: 0", SwingConstants.CENTER);
-        objectCountLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        objectCountLabel.setForeground(Color.WHITE);
-        resultFrame.add(objectCountLabel, BorderLayout.SOUTH);
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> customFrame.dispose());
+        customFrame.add(backButton, BorderLayout.SOUTH);
 
-        resultFrame.setVisible(true);
-    }
+        JButton saveButton = new JButton("Save Image");
+        customFrame.add(saveButton, BorderLayout.NORTH);
 
-    private static List<String> getOutputNames(Net net) {
-        List<String> names = new ArrayList<>();
-        List<Integer> outLayers = net.getUnconnectedOutLayers().toList();
-        List<String> layersNames = net.getLayerNames();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        for (Integer item : outLayers) {
-            names.add(layersNames.get(item - 1));
+        int returnValue = fileChooser.showOpenDialog(mainFrame);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            Mat image = Imgcodecs.imread(selectedFile.getAbsolutePath());
+
+            if (image.empty()) {
+                JOptionPane.showMessageDialog(mainFrame, "Error: Unable to read image.");
+                return;
+            }
+
+            Net net = Dnn.readNetFromDarknet("yolov3.cfg", "yolov3.weights");
+            net.setPreferableBackend(Dnn.DNN_BACKEND_OPENCV);
+            net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
+
+            List<String> classNames = getClassNames("coco.names");
+            Map<String, Color> colorMap = getColorMap(classNames);
+
+            Mat blob = Dnn.blobFromImage(image, 1 / 255.0, new Size(416, 416), new Scalar(0), true, false);
+            net.setInput(blob);
+            List<String> outBlobNames = net.getUnconnectedOutLayersNames();
+            List<Mat> result = new ArrayList<>();
+            net.forward(result, outBlobNames);
+
+            JLabel objectCountLabel = new JLabel("Objects Detected: 0", SwingConstants.CENTER);
+            objectCountLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            objectCountLabel.setForeground(Color.RED);
+            customFrame.add(objectCountLabel, BorderLayout.NORTH);
+
+            drawDetections(image, result, classNames, colorMap, objectCountLabel);
+
+            BufferedImage outputImage = matToBufferedImage(image);
+            if (outputImage != null) {
+                imageLabel.setIcon(new ImageIcon(outputImage));
+
+                saveButton.addActionListener(e -> {
+                    JFileChooser saveChooser = new JFileChooser();
+                    saveChooser.setDialogTitle("Save Image");
+                    int userSelection = saveChooser.showSaveDialog(customFrame);
+
+                    if (userSelection == JFileChooser.APPROVE_OPTION) {
+                        File fileToSave = saveChooser.getSelectedFile();
+                        try {
+                            ImageIO.write(outputImage, "png", fileToSave);
+                            JOptionPane.showMessageDialog(customFrame, "Image saved successfully!");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(customFrame, "Error: Unable to save image.");
+                        }
+                    }
+                });
+            }
         }
-        return names;
+        customFrame.setVisible(true);
     }
 
-    private static List<String> loadClassNames(String classNamesFile) {
+    private static List<String> getClassNames(String filePath) {
         List<String> classNames = new ArrayList<>();
-        try {
-            classNames = Files.readAllLines(Paths.get(classNamesFile));
-        } catch (Exception e) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                classNames.add(line.trim());
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return classNames;
     }
 
-    private static BufferedImage convertMatToImage(Mat mat) {
-        int type = BufferedImage.TYPE_BYTE_GRAY;
-        if (mat.channels() > 1) {
-            type = BufferedImage.TYPE_3BYTE_BGR;
+    private static Map<String, Color> getColorMap(List<String> classNames) {
+        Map<String, Color> colorMap = new HashMap<>();
+        Random random = new Random();
+        for (String className : classNames) {
+            colorMap.put(className, new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
         }
+        return colorMap;
+    }
+
+    private static BufferedImage matToBufferedImage(Mat mat) {
+        if (mat == null || mat.empty()) {
+            return null;
+        }
+        int type = mat.channels() > 1 ? BufferedImage.TYPE_3BYTE_BGR : BufferedImage.TYPE_BYTE_GRAY;
         BufferedImage image = new BufferedImage(mat.cols(), mat.rows(), type);
         mat.get(0, 0, ((DataBufferByte) image.getRaster().getDataBuffer()).getData());
         return image;
     }
 
-    private static Map<String, Color> createColorMap(List<String> classNames) {
-        Map<String, Color> colorMap = new HashMap<>();
-        for (String className : classNames) {
-            colorMap.put(className, Color.getHSBColor((float) Math.random(), 0.9f, 0.9f));
-        }
-        return colorMap;
-    }
-
     private static void showAbout() {
-        JOptionPane.showMessageDialog(null, "Object Detection App\nBy Rauf, Ahsan, and Umar", "About", JOptionPane.INFORMATION_MESSAGE);
+        String message = "Object Detection App\nVersion 1.0\n\n"
+            + "Developed by:\n"
+            + "Rauf: Model development\n"
+            + "Ahsan: GUI development\n"
+            + "Umar: UI design\n\n"
+            + "Usage Instructions:\n"
+            + " - Click 'Live Detection' for real-time object detection.\n"
+            + " - Click 'Custom Detection' to detect objects in a selected image.";
+            
+        JOptionPane.showMessageDialog(mainFrame, message, "Object Detection App", JOptionPane.INFORMATION_MESSAGE);
     }
+    
 }
