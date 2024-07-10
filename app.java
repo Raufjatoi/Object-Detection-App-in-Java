@@ -1,3 +1,4 @@
+// importing libs 
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.dnn.Dnn;
@@ -5,7 +6,6 @@ import org.opencv.dnn.Net;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -19,60 +19,56 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+// main class 
 public class app {
     static {
-        // Load the OpenCV library
+        // loading the OpenCV library
         System.load("D:\\Downloads\\opencv\\build\\java\\x64\\opencv_java490.dll");
     }
 
-    private static JFrame mainFrame;
-
+    public static JFrame mainFrame;
+    // main function 
     public static void main(String[] args) {
-        // Load OpenCV library
+        // loading OpenCV library again
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        // Create main window
-        mainFrame = new JFrame("Object Detection App");
+        // creating main window
+        mainFrame = new JFrame("Object Detection App in Java ");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Fullscreen window
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen window
         mainFrame.setLayout(new BorderLayout());
-        mainFrame.getRootPane().setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK)); // Border for the window
+        mainFrame.getRootPane().setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK)); // border for the window
 
-        // Header
+        // header
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
         headerPanel.setBackground(new Color(0, 102, 204));
         headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.BLACK)); // Border for the header
 
-        // Cool emoji or icon (replace with your preferred image)
-        ImageIcon coolIcon = new ImageIcon("cool_detection_icon.png");
-        JLabel coolLabel = new JLabel(coolIcon);
-        coolLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        headerPanel.add(coolLabel, BorderLayout.WEST);
-
-        JLabel titleLabel = new JLabel("Object Detection App", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Object Detection App in Java ", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         headerPanel.add(titleLabel, BorderLayout.CENTER);
 
-        // Profile pictures with hover effect
+        // profile pictures with hover effects
         JPanel profilePanel = new JPanel();
         profilePanel.setBackground(new Color(0, 102, 204));
         profilePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        profilePanel.add(createProfilePic("rp.PNG", "Live Detection", e -> startLiveDetection(mainFrame)));
-        profilePanel.add(createProfilePic("umar.jpeg", "Custom Detection", e -> startCustomDetection(mainFrame)));
-        profilePanel.add(createProfilePic("ahsan.jpeg", "About", e -> showAbout()));
-
+        profilePanel.add(createProfilePic("rp.PNG", "Rauf", e -> openWebPage("about.html")));
+        profilePanel.add(createProfilePic("umar.jpeg", "Custom Detection", e -> openWebPage("about.html")));
+        profilePanel.add(createProfilePic("ahsan.jpeg", "About", e -> openWebPage("about.html")));
+        
         headerPanel.add(profilePanel, BorderLayout.EAST);
-
-        // Center panel for buttons
+        // center panel for buttons
         JPanel centerPanel = new JPanel();
         centerPanel.setBackground(Color.DARK_GRAY);
         centerPanel.setLayout(new GridBagLayout());
@@ -88,7 +84,7 @@ public class app {
         gbc.gridy = 1;
         centerPanel.add(customDetectionButton, gbc);
 
-        // Footer
+        // footer
         JPanel footerPanel = new JPanel();
         footerPanel.setBackground(new Color(0, 102, 204));
         footerPanel.setLayout(new BorderLayout());
@@ -96,22 +92,18 @@ public class app {
         JLabel footerLabel = new JLabel("By Rauf, Ahsan, and Umar", SwingConstants.CENTER);
         footerLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         footerLabel.setForeground(Color.WHITE);
-
         JButton aboutButton = new JButton("About");
         aboutButton.setFont(new Font("Arial", Font.PLAIN, 16));
         aboutButton.addActionListener(e -> showAbout());
 
         footerPanel.add(footerLabel, BorderLayout.CENTER);
         footerPanel.add(aboutButton, BorderLayout.EAST);
-
-        // Add panels to main frame
+        // addin panels to main frame
         mainFrame.add(headerPanel, BorderLayout.NORTH);
         mainFrame.add(centerPanel, BorderLayout.CENTER);
         mainFrame.add(footerPanel, BorderLayout.SOUTH);
-
         mainFrame.setVisible(true);
     }
-
     private static JButton createStyledButton(String text, ActionListener action) {
         JButton button = new JButton(text);
         button.setFont(new Font("Arial", Font.BOLD, 24));
@@ -126,7 +118,6 @@ public class app {
             public void mouseEntered(MouseEvent e) {
                 button.setBackground(new Color(0, 102, 204));
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 button.setBackground(new Color(51, 153, 255));
@@ -134,13 +125,11 @@ public class app {
         });
         return button;
     }
-
     private static JLabel createProfilePic(String filePath, String toolTipText, ActionListener action) {
         try {
             BufferedImage profilePic = ImageIO.read(new File(filePath));
             Image scaledImage = profilePic.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
             ImageIcon icon = new ImageIcon(scaledImage);
-
             JLabel label = new JLabel(icon);
             label.setToolTipText(toolTipText);
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -149,13 +138,11 @@ public class app {
                 public void mouseClicked(MouseEvent e) {
                     action.actionPerformed(null);
                 }
-
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
                     label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
-
                 @Override
                 public void mouseExited(MouseEvent e) {
                     label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -168,11 +155,9 @@ public class app {
             return new JLabel("Profile");
         }
     }
-
     private static void drawDetections(Mat frame, List<Mat> result, List<String> classNames, Map<String, Color> colorMap, JLabel objectCountLabel) {
         int objectsDetected = 0;
-        Map<String, Rectangle> drawnObjects = new HashMap<>(); // Track drawn objects
-
+        Map<String, Rectangle> drawnObjects = new HashMap<>(); // track drawn objects
         for (Mat level : result) {
             for (int i = 0; i < level.rows(); ++i) {
                 Mat row = level.row(i);
@@ -225,31 +210,25 @@ public class app {
 
         JLabel imageLabel = new JLabel();
         liveFrame.add(imageLabel, BorderLayout.CENTER);
-
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> liveFrame.dispose());
         liveFrame.add(backButton, BorderLayout.SOUTH);
-
         VideoCapture capture = new VideoCapture(0);
         if (!capture.isOpened()) {
             JOptionPane.showMessageDialog(mainFrame, "Error: Unable to open camera.");
             return;
         }
-
         JLabel objectCountLabel = new JLabel("Objects Detected: 0", SwingConstants.CENTER);
         objectCountLabel.setFont(new Font("Arial", Font.BOLD, 16));
         objectCountLabel.setForeground(Color.RED);
         liveFrame.add(objectCountLabel, BorderLayout.NORTH);
-
         Thread liveThread = new Thread(() -> {
             Mat frame = new Mat();
-            Net net = Dnn.readNetFromDarknet("yolov3.cfg", "yolov3.weights");
+            Net net = Dnn.readNetFromDarknet("yolov4.cfg", "yolov4.weights");
             net.setPreferableBackend(Dnn.DNN_BACKEND_OPENCV);
             net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
-
             List<String> classNames = getClassNames("coco.names");
             Map<String, Color> colorMap = getColorMap(classNames);
-
             while (capture.isOpened()) {
                 capture.read(frame);
                 if (!frame.empty()) {
@@ -258,9 +237,7 @@ public class app {
                     net.setInput(blob);
                     List<String> outBlobNames = net.getUnconnectedOutLayersNames();
                     net.forward(result, outBlobNames);
-
                     drawDetections(frame, result, classNames, colorMap, objectCountLabel);
-
                     BufferedImage image = matToBufferedImage(frame);
                     if (image != null) {
                         SwingUtilities.invokeLater(() -> imageLabel.setIcon(new ImageIcon(image)));
@@ -272,65 +249,50 @@ public class app {
         liveThread.start();
         liveFrame.setVisible(true);
     }
-
     private static void startCustomDetection(JFrame mainFrame) {
         JFrame customFrame = new JFrame("Custom Detection");
         customFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         customFrame.setSize(800, 600);
         customFrame.setLayout(new BorderLayout());
-
         JLabel imageLabel = new JLabel();
         customFrame.add(imageLabel, BorderLayout.CENTER);
-
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> customFrame.dispose());
         customFrame.add(backButton, BorderLayout.SOUTH);
-
         JButton saveButton = new JButton("Save Image");
         customFrame.add(saveButton, BorderLayout.NORTH);
-
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
         int returnValue = fileChooser.showOpenDialog(mainFrame);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             Mat image = Imgcodecs.imread(selectedFile.getAbsolutePath());
-
             if (image.empty()) {
                 JOptionPane.showMessageDialog(mainFrame, "Error: Unable to read image.");
                 return;
             }
-
             Net net = Dnn.readNetFromDarknet("yolov3.cfg", "yolov3.weights");
             net.setPreferableBackend(Dnn.DNN_BACKEND_OPENCV);
             net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
-
             List<String> classNames = getClassNames("coco.names");
             Map<String, Color> colorMap = getColorMap(classNames);
-
             Mat blob = Dnn.blobFromImage(image, 1 / 255.0, new Size(416, 416), new Scalar(0), true, false);
             net.setInput(blob);
             List<String> outBlobNames = net.getUnconnectedOutLayersNames();
             List<Mat> result = new ArrayList<>();
             net.forward(result, outBlobNames);
-
             JLabel objectCountLabel = new JLabel("Objects Detected: 0", SwingConstants.CENTER);
             objectCountLabel.setFont(new Font("Arial", Font.BOLD, 16));
             objectCountLabel.setForeground(Color.RED);
             customFrame.add(objectCountLabel, BorderLayout.NORTH);
-
             drawDetections(image, result, classNames, colorMap, objectCountLabel);
-
             BufferedImage outputImage = matToBufferedImage(image);
             if (outputImage != null) {
                 imageLabel.setIcon(new ImageIcon(outputImage));
-
                 saveButton.addActionListener(e -> {
                     JFileChooser saveChooser = new JFileChooser();
                     saveChooser.setDialogTitle("Save Image");
                     int userSelection = saveChooser.showSaveDialog(customFrame);
-
                     if (userSelection == JFileChooser.APPROVE_OPTION) {
                         File fileToSave = saveChooser.getSelectedFile();
                         try {
@@ -346,7 +308,6 @@ public class app {
         }
         customFrame.setVisible(true);
     }
-
     private static List<String> getClassNames(String filePath) {
         List<String> classNames = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -359,7 +320,6 @@ public class app {
         }
         return classNames;
     }
-
     private static Map<String, Color> getColorMap(List<String> classNames) {
         Map<String, Color> colorMap = new HashMap<>();
         Random random = new Random();
@@ -368,7 +328,6 @@ public class app {
         }
         return colorMap;
     }
-
     private static BufferedImage matToBufferedImage(Mat mat) {
         if (mat == null || mat.empty()) {
             return null;
@@ -378,7 +337,6 @@ public class app {
         mat.get(0, 0, ((DataBufferByte) image.getRaster().getDataBuffer()).getData());
         return image;
     }
-
     private static void showAbout() {
         String message = "Object Detection App\nVersion 1.0\n\n"
             + "Developed by:\n"
@@ -390,6 +348,14 @@ public class app {
             + " - Click 'Custom Detection' to detect objects in a selected image.";
             
         JOptionPane.showMessageDialog(mainFrame, message, "Object Detection App", JOptionPane.INFORMATION_MESSAGE);
+    }    
+
+    public static void openWebPage(String url) {
+    try {
+        Desktop.getDesktop().browse(new URI(url));
+    } catch (IOException | URISyntaxException ex) {
+        ex.printStackTrace();
     }
-    
+}
+
 }
