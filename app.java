@@ -29,13 +29,14 @@ import java.util.Random;
 
 // main class 
 public class app {
+    // static fun to load the lib
     static {
         // loading the OpenCV library
         System.load("D:\\Downloads\\opencv\\build\\java\\x64\\opencv_java490.dll");
     }
 
     public static JFrame mainFrame;
-    // main function 
+    // main function or method 
     public static void main(String[] args) {
         // loading OpenCV library again
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -104,7 +105,7 @@ public class app {
         mainFrame.add(footerPanel, BorderLayout.SOUTH);
         mainFrame.setVisible(true);
     }
-    private static JButton createStyledButton(String text, ActionListener action) {
+    public static JButton createStyledButton(String text, ActionListener action) {
         JButton button = new JButton(text);
         button.setFont(new Font("Arial", Font.BOLD, 24));
         button.setForeground(Color.WHITE);
@@ -125,7 +126,7 @@ public class app {
         });
         return button;
     }
-    private static JLabel createProfilePic(String filePath, String toolTipText, ActionListener action) {
+    public static JLabel createProfilePic(String filePath, String toolTipText, ActionListener action) {
         try {
             BufferedImage profilePic = ImageIO.read(new File(filePath));
             Image scaledImage = profilePic.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
@@ -155,7 +156,7 @@ public class app {
             return new JLabel("Profile");
         }
     }
-    private static void drawDetections(Mat frame, List<Mat> result, List<String> classNames, Map<String, Color> colorMap, JLabel objectCountLabel) {
+    public static void drawDetections(Mat frame, List<Mat> result, List<String> classNames, Map<String, Color> colorMap, JLabel objectCountLabel) {
         int objectsDetected = 0;
         Map<String, Rectangle> drawnObjects = new HashMap<>(); // track drawn objects
         for (Mat level : result) {
@@ -193,7 +194,7 @@ public class app {
         objectCountLabel.setText("Objects Detected: " + objectsDetected);
     }
 
-    private static boolean isOverlapping(Rectangle rect, Map<String, Rectangle> drawnObjects) {
+    public static boolean isOverlapping(Rectangle rect, Map<String, Rectangle> drawnObjects) {
         for (Rectangle existingRect : drawnObjects.values()) {
             if (rect.intersects(existingRect)) {
                 return true;
@@ -202,10 +203,10 @@ public class app {
         return false;
     }
 
-    private static void startLiveDetection(JFrame mainFrame) {
+    public static void startLiveDetection(JFrame mainFrame) {
         JFrame liveFrame = new JFrame("Live Detection");
         liveFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        liveFrame.setSize(800, 600);
+        liveFrame.setSize(650, 600);
         liveFrame.setLayout(new BorderLayout());
 
         JLabel imageLabel = new JLabel();
@@ -249,10 +250,10 @@ public class app {
         liveThread.start();
         liveFrame.setVisible(true);
     }
-    private static void startCustomDetection(JFrame mainFrame) {
+    public static void startCustomDetection(JFrame mainFrame) {
         JFrame customFrame = new JFrame("Custom Detection");
         customFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        customFrame.setSize(800, 600);
+        customFrame.setSize(1250, 800);
         customFrame.setLayout(new BorderLayout());
         JLabel imageLabel = new JLabel();
         customFrame.add(imageLabel, BorderLayout.CENTER);
