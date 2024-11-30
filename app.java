@@ -1,4 +1,4 @@
-// importing libs 
+// huh
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.dnn.Dnn;
@@ -41,7 +41,7 @@ public class app {
         // loading OpenCV library again
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        // creating main window
+        // title 
         mainFrame = new JFrame("Object Detection App in Java ");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen window
