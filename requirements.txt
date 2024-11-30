@@ -1,5 +1,5 @@
-streamlit==1.27.0
-torch==2.0.1
-opencv-python==4.8.0.74
-numpy==1.23.5
-Pillow==9.5.0
+streamlit
+torch
+opencv-python
+numpy
+Pillow
